@@ -9,44 +9,44 @@ use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
 
 pub fn setup_logger() {
-    let mut builder = Builder::new();
+	let mut builder = Builder::new();
 
-    builder
-        .format(|buf, record| {
-            let mut style = buf.style();
+	builder
+		.format(|buf, record| {
+			let mut style = buf.style();
 
-            let level = match record.level() {
-                Level::Trace => style.set_color(Color::Cyan).value("TRACE"),
-                Level::Debug => style.set_color(Color::Black).value("DEBUG"),
-                Level::Info => style.set_color(Color::Green).value("INFO "),
-                Level::Warn => style.set_color(Color::Yellow).value("WARN "),
-                Level::Error => style.set_color(Color::Red).value("ERROR"),
-            };
+			let level = match record.level() {
+				Level::Trace => style.set_color(Color::Cyan).value("TRACE"),
+				Level::Debug => style.set_color(Color::Black).value("DEBUG"),
+				Level::Info => style.set_color(Color::Green).value("INFO "),
+				Level::Warn => style.set_color(Color::Yellow).value("WARN "),
+				Level::Error => style.set_color(Color::Red).value("ERROR"),
+			};
 
-            writeln!(buf, "{}: {}", level, record.args())
-        })
-        .filter(None, LevelFilter::Info)
-        .parse_default_env()
-        .write_style(WriteStyle::Always)
-        .init();
+			writeln!(buf, "{}: {}", level, record.args())
+		})
+		.filter(None, LevelFilter::Info)
+		.parse_default_env()
+		.write_style(WriteStyle::Always)
+		.init();
 }
 
 fn unescape_html(content: &str) -> String {
-    static MATCHER: Lazy<AhoCorasick> = Lazy::new(|| {
-        AhoCorasickBuilder::new()
-            .match_kind(MatchKind::LeftmostFirst)
-            .build(&[
-                "&nbsp;", "&lt;", "&gt;", "&amp;", "&quot;", "&apos;", "&cent;", "&pound;",
-                "&yen;", "&euro;", "&copy;", "&reg;", "&ndash;", "&mdash;",
-            ])
-    });
+	static MATCHER: Lazy<AhoCorasick> = Lazy::new(|| {
+		AhoCorasickBuilder::new()
+			.match_kind(MatchKind::LeftmostFirst)
+			.build(&[
+				"&nbsp;", "&lt;", "&gt;", "&amp;", "&quot;", "&apos;", "&cent;", "&pound;",
+				"&yen;", "&euro;", "&copy;", "&reg;", "&ndash;", "&mdash;",
+			])
+	});
 
-    MATCHER.replace_all(
-        content,
-        &[
-            " ", "<", ">", "&", "\"", "'", "¢", "£", "¥", "€", "©", "®", "–", "—",
-        ],
-    )
+	MATCHER.replace_all(
+		content,
+		&[
+			" ", "<", ">", "&", "\"", "'", "¢", "£", "¥", "€", "©", "®", "–", "—",
+		],
+	)
 }
 
 #[rustfmt::skip]
@@ -63,26 +63,26 @@ fn unescape_utf8(content: &str) -> Cow<str> {
 }
 
 pub fn strip_html(content: &str) -> String {
-    static BR_ELEM_REGEX: Lazy<Regex> =
-        Lazy::new(|| Regex::new(r"</?(?:br|p)(/?|(.*?))>").unwrap());
-    static HTML_ELEM_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"<[^>]+>").unwrap());
+	static BR_ELEM_REGEX: Lazy<Regex> =
+		Lazy::new(|| Regex::new(r"</?(?:br|p)(/?|(.*?))>").unwrap());
+	static HTML_ELEM_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"<[^>]+>").unwrap());
 
-    let content = unescape_utf8(content);
+	let content = unescape_utf8(content);
 
-    let stripped_br = BR_ELEM_REGEX.replace_all(&content, "\n");
-    let ret = HTML_ELEM_REGEX.replace_all(&stripped_br, "");
+	let stripped_br = BR_ELEM_REGEX.replace_all(&content, "\n");
+	let ret = HTML_ELEM_REGEX.replace_all(&stripped_br, "");
 
-    unescape_html(&ret)
+	unescape_html(&ret)
 }
 
 pub fn create_url(template: &str, separator: &str, title: &str, artist: &str) -> String {
-    static FEATURES_REGEX: Lazy<Regex> =
-        Lazy::new(|| Regex::new(r" ?\((with|feat)(.*?)\)").unwrap());
+	static FEATURES_REGEX: Lazy<Regex> =
+		Lazy::new(|| Regex::new(r" ?\((with|feat)(.*?)\)").unwrap());
 
-    let title = FEATURES_REGEX.replacen(title, 0, "").replace('\'', "");
-    let artist = artist.replace('\'', "");
+	let title = FEATURES_REGEX.replacen(title, 0, "").replace('\'', "");
+	let artist = artist.replace('\'', "");
 
-    template
-        .replace("%artist%", &artist.replace(&['_', '-', ' '], separator))
-        .replace("%title%", &title.replace(&['_', '-', ' '], separator))
+	template
+		.replace("%artist%", &artist.replace(&['_', '-', ' '], separator))
+		.replace("%title%", &title.replace(&['_', '-', ' '], separator))
 }
