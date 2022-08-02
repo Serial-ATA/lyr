@@ -69,8 +69,8 @@ async fn real_main(args: Args) -> Result<()> {
                     break;
                 }
 
-                title = tag.title().map(ToOwned::to_owned);
-                artist = tag.artist().map(ToOwned::to_owned);
+                title = tag.title().map(str::to_lowercase);
+                artist = tag.artist().map(str::to_lowercase);
             }
 
             if title.is_none() || artist.is_none() {
@@ -88,6 +88,7 @@ async fn real_main(args: Args) -> Result<()> {
         if let Some(fetcher) = fetchers.next() {
             let fetcher = match &**fetcher {
                 "genius" => GENIUS_LYRICS_FETCHER.deref(),
+                "azlyrics" => AZLYRICS_FETCHER.deref(),
                 _ => unreachable!(),
             };
 

@@ -15,7 +15,7 @@ impl Default for Config {
     fn default() -> Self {
         Self {
             flags: String::new(),
-            fetchers: DEFAULT_FETCHERS.clone(),
+            fetchers: DEFAULT_FETCHERS.iter().map(|s| s.to_string()).collect(),
         }
     }
 }
@@ -52,12 +52,12 @@ impl Config {
         let bad_keys = conf
             .fetchers
             .iter()
-            .filter(|f| !DEFAULT_FETCHERS.contains(f))
+            .filter(|f| !DEFAULT_FETCHERS.contains(&f.as_str()))
             .collect::<Vec<_>>();
         if !bad_keys.is_empty() {
             return Err(Error::BadFetcher(format!(
                 "{:?}, Valid keys are: {:?}",
-                bad_keys, *DEFAULT_FETCHERS
+                bad_keys, DEFAULT_FETCHERS
             )));
         }
 

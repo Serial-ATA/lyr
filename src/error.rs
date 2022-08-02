@@ -13,6 +13,7 @@ pub enum Error {
     IO(#[from] std::io::Error),
     Lofty(#[from] lofty::LoftyError),
     InvalidTags,
+    NoMatches,
 }
 
 impl Display for Error {
@@ -24,7 +25,11 @@ impl Display for Error {
             Error::BadConfig(ref err) => write!(f, "Failed to read config: {err}"),
             Error::IO(ref err) => write!(f, "An IO error occurred: {err}"),
             Error::Lofty(ref err) => write!(f, "Failed to read file tags: {err}"),
-            Error::InvalidTags => write!(f, "The provided file does not have a title or artist available")
+            Error::InvalidTags => write!(
+                f,
+                "The provided file does not have a title or artist available"
+            ),
+            Error::NoMatches => write!(f, "No match found in fetcher's output"),
         }
     }
 }

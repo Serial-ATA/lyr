@@ -4,9 +4,9 @@ use std::io::Write;
 use aho_corasick::{AhoCorasick, AhoCorasickBuilder, MatchKind};
 use env_logger::fmt::Color;
 use env_logger::{Builder, WriteStyle};
-use fancy_regex::{Captures, Regex};
 use log::{Level, LevelFilter};
 use once_cell::sync::Lazy;
+use regex::{Captures, Regex};
 
 pub fn setup_logger() {
     let mut builder = Builder::new();
@@ -26,6 +26,7 @@ pub fn setup_logger() {
             writeln!(buf, "{}: {}", level, record.args())
         })
         .filter(None, LevelFilter::Info)
+        .parse_default_env()
         .write_style(WriteStyle::Always)
         .init();
 }
@@ -78,7 +79,8 @@ pub fn create_url(template: &str, separator: &str, title: &str, artist: &str) ->
     static FEATURES_REGEX: Lazy<Regex> =
         Lazy::new(|| Regex::new(r" ?\((with|feat)(.*?)\)").unwrap());
 
-    let title = FEATURES_REGEX.replacen(title, 0, "");
+    let title = FEATURES_REGEX.replacen(title, 0, "").replace('\'', "");
+    let artist = artist.replace('\'', "");
 
     template
         .replace("%artist%", &artist.replace(&['_', '-', ' '], separator))
