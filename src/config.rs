@@ -57,7 +57,7 @@ impl Config {
         if !bad_keys.is_empty() {
             return Err(Error::BadFetcher(format!(
                 "{:?}, Valid keys are: {:?}",
-                bad_keys, DEFAULT_FETCHERS
+                bad_keys, *DEFAULT_FETCHERS
             )));
         }
 

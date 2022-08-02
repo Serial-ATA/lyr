@@ -5,7 +5,7 @@ mod utils;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
-use crate::fetcher::GENIUS_LYRICS_FETCHER;
+use crate::fetcher::{AZLYRICS_FETCHER, GENIUS_LYRICS_FETCHER};
 
 use std::fs;
 use std::ops::Deref;
@@ -48,7 +48,7 @@ async fn main() {
     let args = Args::parse();
 
     if let Err(e) = real_main(args).await {
-        log::error!("{:?}", e);
+        log::error!("{e}");
         process::exit(-1);
     }
 }
