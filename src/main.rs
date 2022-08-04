@@ -5,7 +5,7 @@ mod utils;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
-use crate::fetcher::{AZLYRICS_FETCHER, GENIUS_LYRICS_FETCHER};
+use crate::fetcher::{AZLYRICS_FETCHER, GENIUS_LYRICS_FETCHER, MUSIXMATCH_FETCHER};
 
 use std::ops::Deref;
 use std::path::PathBuf;
@@ -23,7 +23,7 @@ struct Args {
 	title: Option<String>,
 	#[clap(long, short)]
 	artist: Option<String>,
-    #[clap(
+	#[clap(
         long,
         short,
         required_unless_present_all = &["title", "artist"],
@@ -86,8 +86,9 @@ async fn real_main(args: Args) -> Result<()> {
 	while lyrics.is_none() {
 		if let Some(fetcher) = fetchers.next() {
 			let fetcher = match &**fetcher {
-				"genius" => GENIUS_LYRICS_FETCHER.deref(),
 				"azlyrics" => AZLYRICS_FETCHER.deref(),
+				"genius" => GENIUS_LYRICS_FETCHER.deref(),
+				"musixmatch" => MUSIXMATCH_FETCHER.deref(),
 				_ => unreachable!(),
 			};
 

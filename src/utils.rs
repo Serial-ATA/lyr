@@ -75,12 +75,20 @@ pub fn strip_html(content: &str) -> String {
 	unescape_html(&ret)
 }
 
-pub fn create_url(template: &str, separator: &str, title: &str, artist: &str) -> String {
+pub fn create_url(
+	template: &str,
+	separator: &str,
+	apostrophe_needs_sep: bool,
+	title: &str,
+	artist: &str,
+) -> String {
 	static FEATURES_REGEX: Lazy<Regex> =
 		Lazy::new(|| Regex::new(r" ?\((with|feat)(.*?)\)").unwrap());
 
-	let title = FEATURES_REGEX.replacen(title, 0, "").replace('\'', "");
-	let artist = artist.replace('\'', "");
+	let title = FEATURES_REGEX
+		.replacen(title, 0, "")
+		.replace('\'', if apostrophe_needs_sep { separator } else { "" });
+	let artist = artist.replace('\'', if apostrophe_needs_sep { separator } else { "" });
 
 	template
 		.replace("%artist%", &artist.replace(&['_', '-', ' '], separator))
