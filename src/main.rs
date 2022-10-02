@@ -107,6 +107,11 @@ async fn real_main(args: Args) -> Result<()> {
 		None => return Err(Error::NoLyrics),
 	};
 
+	if args.output.is_none() && (args.input.is_none() || args.no_embed) {
+		println!("{}", lyrics);
+		return Ok(());
+	}
+
 	if let Some(ref output) = args.output {
 		fs::write(output, &lyrics)?;
 	}
