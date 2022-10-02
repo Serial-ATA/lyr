@@ -50,7 +50,7 @@ impl Config {
 		let bad_keys = conf
 			.fetchers
 			.iter()
-			.filter(|f| !DEFAULT_FETCHERS.contains(&f))
+			.filter(|f| !DEFAULT_FETCHERS.contains(f))
 			.collect::<Vec<_>>();
 		if !bad_keys.is_empty() {
 			return Err(Error::BadFetcher(format!(

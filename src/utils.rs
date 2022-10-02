@@ -35,7 +35,7 @@ fn unescape_html(content: &str) -> String {
 	static MATCHER: Lazy<AhoCorasick> = Lazy::new(|| {
 		AhoCorasickBuilder::new()
 			.match_kind(MatchKind::LeftmostFirst)
-			.build(&[
+			.build([
 				"&nbsp;", "&lt;", "&gt;", "&amp;", "&quot;", "&apos;", "&cent;", "&pound;",
 				"&yen;", "&euro;", "&copy;", "&reg;", "&ndash;", "&mdash;",
 			])
@@ -91,6 +91,6 @@ pub fn create_url(
 	let artist = artist.replace('\'', if apostrophe_needs_sep { separator } else { "" });
 
 	template
-		.replace("%artist%", &artist.replace(&['_', '-', ' '], separator))
-		.replace("%title%", &title.replace(&['_', '-', ' '], separator))
+		.replace("%artist%", &artist.replace(['_', '-', ' '], separator))
+		.replace("%title%", &title.replace(['_', '-', ' '], separator))
 }
