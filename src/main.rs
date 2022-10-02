@@ -37,7 +37,7 @@ struct Args {
 		help = "If the lyrics should be embedded in the tags of the input file"
 	)]
 	no_embed: bool,
-	#[clap(name = "OUTPUT TEXT FILE", parse(from_os_str), value_hint = ValueHint::FilePath)]
+	#[clap(name = "OUTPUT TEXT FILE", value_hint = ValueHint::FilePath)]
 	output: Option<PathBuf>,
 }
 
