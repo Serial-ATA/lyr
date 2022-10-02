@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    paths-ignore:
+      - 'LICENSE-*'
+      - '**/*.md'
+      - '.gitignore'
+      - 'CHANGELOG.md'
+    branches:
+      - master
+  pull_request:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: cargo test --all-features --tests
+  docs:
+    name: Docs
+    runs-on: ubuntu-latest
+    env:
+      RUSTDOCFLAGS: -Dwarnings
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: cargo doc --all-features --no-deps
+      - run: cargo test --all-features --doc
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: nightly
+          override: true
+      - run: rustup component add clippy
+      - run: cargo clippy --all-features -- -Dclippy::all -Dclippy::pedantic
+  style:
+    name: Style
+    runs-on: ubuntu-latest
+    steps:
+      -   uses: actions/checkout@v2
+      -   uses: actions-rs/toolchain@v1
+          with:
+            profile: minimal
+            toolchain: nightly
+            override: true
+      -   run: rustup component add rustfmt
+      -   run: cargo fmt -- --check
