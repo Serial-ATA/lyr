@@ -9,10 +9,14 @@ use serde::{Deserialize, Serialize};
 pub enum FetcherType {
 	AZLyrics,
 	Genius,
-	Musixmatch
+	Musixmatch,
 }
 
-pub static DEFAULT_FETCHERS: &[FetcherType] = &[FetcherType::AZLyrics, FetcherType::Genius, FetcherType::Musixmatch];
+pub static DEFAULT_FETCHERS: &[FetcherType] = &[
+	FetcherType::AZLyrics,
+	FetcherType::Genius,
+	FetcherType::Musixmatch,
+];
 
 pub(crate) struct Fetcher {
 	name: &'static str,

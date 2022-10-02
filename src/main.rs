@@ -1,3 +1,6 @@
+#![deny(clippy::all, clippy::pedantic)]
+#![allow(clippy::single_match_else, clippy::module_name_repetitions)]
+
 mod config;
 mod error;
 mod fetcher;
@@ -5,9 +8,8 @@ mod utils;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
-use crate::fetcher::{AZLYRICS_FETCHER, FetcherType, GENIUS_LYRICS_FETCHER, MUSIXMATCH_FETCHER};
+use crate::fetcher::{FetcherType, AZLYRICS_FETCHER, GENIUS_LYRICS_FETCHER, MUSIXMATCH_FETCHER};
 
-use std::ops::Deref;
 use std::path::PathBuf;
 use std::{fs, process};
 
@@ -85,9 +87,9 @@ async fn real_main(args: Args) -> Result<()> {
 	loop {
 		if let Some(fetcher) = fetchers.next() {
 			let fetcher = match fetcher {
-				FetcherType::AZLyrics   => AZLYRICS_FETCHER.deref(),
-				FetcherType::Genius     => GENIUS_LYRICS_FETCHER.deref(),
-				FetcherType::Musixmatch => MUSIXMATCH_FETCHER.deref(),
+				FetcherType::AZLyrics => &*AZLYRICS_FETCHER,
+				FetcherType::Genius => &*GENIUS_LYRICS_FETCHER,
+				FetcherType::Musixmatch => &*MUSIXMATCH_FETCHER,
 			};
 
 			// TODO: verbose flag

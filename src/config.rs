@@ -1,5 +1,5 @@
 use crate::error::{Error, Result};
-use crate::fetcher::{DEFAULT_FETCHERS, FetcherType};
+use crate::fetcher::{FetcherType, DEFAULT_FETCHERS};
 
 use std::fs;
 
