@@ -15,17 +15,17 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  test:
-    name: Tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - run: cargo test --all-features --tests
+#  test:
+#    name: Tests
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions-rs/toolchain@v1
+#        with:
+#          profile: minimal
+#          toolchain: stable
+#          override: true
+#      - run: cargo test --all-features --tests
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
