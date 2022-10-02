@@ -3,8 +3,16 @@ use crate::utils::create_url;
 
 use once_cell::sync::Lazy;
 use regex::{Regex, RegexBuilder};
+use serde::{Deserialize, Serialize};
 
-pub static DEFAULT_FETCHERS: &[&str] = &["azlyrics", "genius", "musixmatch"];
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub enum FetcherType {
+	AZLyrics,
+	Genius,
+	Musixmatch
+}
+
+pub static DEFAULT_FETCHERS: &[FetcherType] = &[FetcherType::AZLyrics, FetcherType::Genius, FetcherType::Musixmatch];
 
 pub(crate) struct Fetcher {
 	name: &'static str,

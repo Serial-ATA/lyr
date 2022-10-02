@@ -5,7 +5,7 @@ mod utils;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
-use crate::fetcher::{AZLYRICS_FETCHER, GENIUS_LYRICS_FETCHER, MUSIXMATCH_FETCHER};
+use crate::fetcher::{AZLYRICS_FETCHER, FetcherType, GENIUS_LYRICS_FETCHER, MUSIXMATCH_FETCHER};
 
 use std::ops::Deref;
 use std::path::PathBuf;
@@ -85,11 +85,10 @@ async fn real_main(args: Args) -> Result<()> {
 
 	while lyrics.is_none() {
 		if let Some(fetcher) = fetchers.next() {
-			let fetcher = match &**fetcher {
-				"azlyrics" => AZLYRICS_FETCHER.deref(),
-				"genius" => GENIUS_LYRICS_FETCHER.deref(),
-				"musixmatch" => MUSIXMATCH_FETCHER.deref(),
-				_ => unreachable!(),
+			let fetcher = match fetcher {
+				FetcherType::AZLyrics => AZLYRICS_FETCHER.deref(),
+				FetcherType::Genius => GENIUS_LYRICS_FETCHER.deref(),
+				FetcherType::Musixmatch => MUSIXMATCH_FETCHER.deref(),
 			};
 
 			// TODO: verbose flag

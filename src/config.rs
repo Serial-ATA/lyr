@@ -1,5 +1,5 @@
 use crate::error::{Error, Result};
-use crate::fetcher::DEFAULT_FETCHERS;
+use crate::fetcher::{DEFAULT_FETCHERS, FetcherType};
 
 use std::fs;
 
@@ -8,14 +8,14 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct Config {
 	pub(crate) flags: String,
-	pub(crate) fetchers: Vec<String>,
+	pub(crate) fetchers: Vec<FetcherType>,
 }
 
 impl Default for Config {
 	fn default() -> Self {
 		Self {
 			flags: String::new(),
-			fetchers: DEFAULT_FETCHERS.iter().map(|s| s.to_string()).collect(),
+			fetchers: DEFAULT_FETCHERS.to_vec(),
 		}
 	}
 }
@@ -45,17 +45,12 @@ impl Config {
 			return Ok(ret);
 		}
 
-		let mut conf: Config = toml::from_str(&fs::read_to_string(config_file)?)?;
-		conf.fetchers = conf
-			.fetchers
-			.iter()
-			.map(|s| s.to_lowercase())
-			.collect::<Vec<_>>();
+		let conf: Config = toml::from_str(&fs::read_to_string(config_file)?)?;
 
 		let bad_keys = conf
 			.fetchers
 			.iter()
-			.filter(|f| !DEFAULT_FETCHERS.contains(&f.as_str()))
+			.filter(|f| !DEFAULT_FETCHERS.contains(&f))
 			.collect::<Vec<_>>();
 		if !bad_keys.is_empty() {
 			return Err(Error::BadFetcher(format!(
