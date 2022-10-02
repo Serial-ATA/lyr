@@ -80,31 +80,28 @@ async fn real_main(args: Args) -> Result<()> {
 	};
 
 	let mut fetchers = config.fetchers.iter();
-	let mut lyrics = None;
+	let lyrics;
 
-	while lyrics.is_none() {
+	loop {
 		if let Some(fetcher) = fetchers.next() {
 			let fetcher = match fetcher {
-				FetcherType::AZLyrics => AZLYRICS_FETCHER.deref(),
-				FetcherType::Genius => GENIUS_LYRICS_FETCHER.deref(),
+				FetcherType::AZLyrics   => AZLYRICS_FETCHER.deref(),
+				FetcherType::Genius     => GENIUS_LYRICS_FETCHER.deref(),
 				FetcherType::Musixmatch => MUSIXMATCH_FETCHER.deref(),
 			};
 
 			// TODO: verbose flag
 			if let Ok(lyrics_) = fetcher::fetch(fetcher, &title, &artist).await {
-				lyrics = Some(lyrics_)
+				lyrics = lyrics_;
+				break;
 			}
 
 			continue;
 		}
 
-		break;
+		// Ran out of fetchers to check
+		return Err(Error::NoLyrics);
 	}
-
-	let lyrics = match lyrics {
-		Some(lyrics) => lyrics,
-		None => return Err(Error::NoLyrics),
-	};
 
 	if args.output.is_none() && (args.input.is_none() || args.no_embed) {
 		println!("{}", lyrics);
