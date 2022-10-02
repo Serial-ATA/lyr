@@ -72,11 +72,10 @@ async fn real_main(args: Args) -> Result<()> {
 				artist = tag.artist().map(str::to_lowercase);
 			}
 
-			if title.is_none() || artist.is_none() {
-				return Err(Error::InvalidTags);
+			match (title, artist) {
+				(Some(title), Some(artist)) => (title, artist),
+				(None, _) | (_, None) => return Err(Error::InvalidTags),
 			}
-
-			(title.unwrap(), artist.unwrap())
 		}
 	};
 

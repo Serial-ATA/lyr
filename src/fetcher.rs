@@ -18,6 +18,7 @@ pub(crate) struct Fetcher {
 	name: &'static str,
 	word_seperator: &'static str,
 	apostrophe_needs_sep: bool,
+	requires_post_processing: bool,
 	url_template: &'static str,
 	regex: Regex,
 }
@@ -27,6 +28,7 @@ pub(crate) static AZLYRICS_FETCHER: Lazy<Fetcher> = Lazy::new(|| {
 		name: "azlyrics",
 		word_seperator: "",
 		apostrophe_needs_sep: false,
+		requires_post_processing: true,
 		url_template: "https://azlyrics.com/lyrics/%artist%/%title%.html",
 		regex: RegexBuilder::new(
 			r"<!-- Usage of azlyrics\.com content by any third-party lyrics provider is prohibited by our licensing agreement\. Sorry about that\. -->(.*?)</div>"
@@ -41,6 +43,7 @@ pub(crate) static GENIUS_LYRICS_FETCHER: Lazy<Fetcher> = Lazy::new(|| Fetcher {
 	name: "Genius",
 	word_seperator: "-",
 	apostrophe_needs_sep: false,
+	requires_post_processing: true,
 	url_template: "https://genius.com/%artist%-%title%-lyrics",
 	regex: Regex::new(r#"<div.*?class="(?:lyrics|Lyrics__Container).*?>(.*?)</div>"#).unwrap(),
 });
@@ -49,6 +52,7 @@ pub(crate) static MUSIXMATCH_FETCHER: Lazy<Fetcher> = Lazy::new(|| Fetcher {
 	name: "Musixmatch",
 	word_seperator: "-",
 	apostrophe_needs_sep: true,
+	requires_post_processing: false,
 	url_template: "https://www.musixmatch.com/lyrics/%artist%/%title%",
 	regex: RegexBuilder::new(r#"<span class="lyrics__content__.*?>(.*?)</span>"#)
 		.dot_matches_new_line(true)
@@ -81,21 +85,13 @@ pub(crate) async fn fetch(fetcher: &Fetcher, title: &str, artist: &str) -> Resul
 		return Err(Error::NoMatches);
 	}
 
-	// TODO: A better way to indicate that a fetcher doesn't need any further processing
-	if fetcher.name == "Musixmatch" {
+	if !fetcher.requires_post_processing {
 		return Ok(result);
 	}
-
-	let mut lyrics = String::new();
 
 	// These newlines interfere with the <br> tags
 	result.retain(|c| !(c == '\n' || c == '\r'));
 
 	let stripped = crate::utils::strip_html(&result);
-	for line in stripped.lines() {
-		lyrics.push_str(line);
-		lyrics.push('\n');
-	}
-
-	Ok(lyrics)
+	Ok(stripped)
 }
