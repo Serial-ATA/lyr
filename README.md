@@ -1,4 +1,59 @@
-# TODO
+# Lyr
+
+Download and embed lyrics from multiple sources.
+
+## Sources
+
+* [AZLyrics](https://azlyrics.com)
+* [Genius](https://genius.com)
+* [Musixmatch](https://www.musixmatch.com)
+
+NOTE: Genius currently has an issue where there will be missing newlines
+      between section headers, so the output may look like:
+
+```
+[Verse 1]
+Foo
+Bar Baz
+Qux
+[Chorus] # Notice this header immediately follows the last line of Verse 1
+```
+
+Not sure how to fix this as of now.
+
+## Usage
+
+Fetch and print the lyrics to stdout:
+```console
+$ lyr --artist="2Pac" --title="Changes"
+```
+
+Try to get the artist and title from the tags in the file:
+
+For the list of supported files see [lofty-rs](https://github.com/Serial-ATA/lofty-rs#supported-formats).
+```console
+# NOTE: This will add the lyrics to the tags of the file
+$ lyr --input="some-music-file.mp3"
+# Use the `no-embed` flag to prevent this
+$ lyr --input="some-music-file.mp3" --no-embed
+```
+
+Output the lyrics to a file:
+```console
+$ lyr --artist="2Pac" --title="Changes" lyrics.txt
+```
+
+## Config
+
+This config is stored at `$CONFIG_DIR/lyr/config.toml`.
+
+```toml
+# Default flags to append to every command
+flags = ''
+# The list of fetchers to use when searching for lyrics
+# These *ARE* CaSe-sEnSitiVe
+fetchers = ['AZLyrics', 'Genius', 'Musixmatch']
+```
 
 ## License
 
