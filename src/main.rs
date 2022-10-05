@@ -59,7 +59,7 @@ async fn real_main(args: Args) -> Result<()> {
 
 	let (title, artist) = {
 		if let (Some(title), Some(artist)) = (args.title, args.artist) {
-			(title, artist)
+			(title.to_lowercase(), artist.to_lowercase())
 		} else {
 			let file = lofty::read_from_path(args.input.as_ref().unwrap(), false)?;
 
