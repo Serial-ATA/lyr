@@ -3,12 +3,11 @@
 
 mod config;
 mod error;
-mod fetcher;
+mod fetchers;
 mod utils;
 
 use crate::config::Config;
 use crate::error::{Error, Result};
-use crate::fetcher::{FetcherType, AZLYRICS_FETCHER, GENIUS_LYRICS_FETCHER, MUSIXMATCH_FETCHER, JAHLYRICS_FETCHER};
 
 use std::path::PathBuf;
 use std::{fs, process};
@@ -86,15 +85,8 @@ async fn real_main(args: Args) -> Result<()> {
 
 	loop {
 		if let Some(fetcher) = fetchers.next() {
-			let fetcher = match fetcher {
-				FetcherType::AZLyrics => &*AZLYRICS_FETCHER,
-				FetcherType::Genius => &*GENIUS_LYRICS_FETCHER,
-				FetcherType::JahLyrics => &*JAHLYRICS_FETCHER,
-				FetcherType::Musixmatch => &*MUSIXMATCH_FETCHER,
-			};
-
 			// TODO: verbose flag
-			if let Ok(lyrics_) = fetcher::fetch(fetcher, &title, &artist).await {
+			if let Ok(lyrics_) = fetchers::fetch(fetcher, &title, &artist).await {
 				lyrics = lyrics_;
 				break;
 			}
