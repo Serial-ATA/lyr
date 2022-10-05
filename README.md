@@ -10,6 +10,7 @@ Download and embed lyrics from multiple sources.
 
 * [AZLyrics](https://azlyrics.com)
 * [Genius](https://genius.com)
+* [JahLyrics](https://jah-lyrics.com)
 * [Musixmatch](https://www.musixmatch.com)
 
 NOTE: Genius currently has an issue where there will be missing newlines
