@@ -56,8 +56,7 @@ This config is stored at `$CONFIG_DIR/lyr/config.toml`.
 # Default flags to append to every command
 flags = ''
 # The list of fetchers to use when searching for lyrics
-# These *ARE* CaSe-sEnSitiVe
-fetchers = ['AZLyrics', 'Genius', 'Musixmatch']
+fetchers = ['AZLyrics', 'Genius', 'JahLyrics', 'Musixmatch']
 ```
 
 ## License
