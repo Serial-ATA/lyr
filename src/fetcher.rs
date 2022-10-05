@@ -9,12 +9,14 @@ use serde::{Deserialize, Serialize};
 pub enum FetcherType {
 	AZLyrics,
 	Genius,
+	JahLyrics,
 	Musixmatch,
 }
 
 pub static DEFAULT_FETCHERS: &[FetcherType] = &[
 	FetcherType::AZLyrics,
 	FetcherType::Genius,
+	FetcherType::JahLyrics,
 	FetcherType::Musixmatch,
 ];
 
@@ -50,6 +52,18 @@ pub(crate) static GENIUS_LYRICS_FETCHER: Lazy<Fetcher> = Lazy::new(|| Fetcher {
 	requires_post_processing: true,
 	url_template: "https://genius.com/%artist%-%title%-lyrics",
 	regex: Regex::new(r#"<div.*?class="(?:lyrics|Lyrics__Container).*?>(.*?)</div>"#).unwrap(),
+});
+
+pub(crate) static JAHLYRICS_FETCHER: Lazy<Fetcher> = Lazy::new(|| Fetcher {
+	name: "Jah Lyrics",
+	word_seperator: "-",
+	apostrophe_needs_sep: true,
+	requires_post_processing: true,
+	url_template: "https://jah-lyrics.com/song/%artist%-%title%",
+	regex: RegexBuilder::new(r#"<div class="song-header">.*?</div>(.*?)<p class="disclaimer">"#)
+		.dot_matches_new_line(true)
+		.build()
+		.unwrap(),
 });
 
 pub(crate) static MUSIXMATCH_FETCHER: Lazy<Fetcher> = Lazy::new(|| Fetcher {

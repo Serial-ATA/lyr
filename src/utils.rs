@@ -72,7 +72,7 @@ pub fn strip_html(content: &str) -> String {
 	let stripped_br = BR_ELEM_REGEX.replace_all(&content, "\n");
 	let ret = HTML_ELEM_REGEX.replace_all(&stripped_br, "");
 
-	unescape_html(&ret)
+	unescape_html(&ret).trim_start().to_string()
 }
 
 pub fn create_url(
