@@ -26,7 +26,7 @@ impl Fetcher for MusixmatchFetcher {
 				.unwrap()
 		});
 
-		&*REGEX
+		&REGEX
 	}
 
 	fn post_process(_input: &mut String) {}

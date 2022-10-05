@@ -11,7 +11,7 @@ use musixmatch::MusixmatchFetcher;
 
 use regex::Regex;
 
-pub(crate) const FETCHERS: &[&'static str] = &["azlyrics", "genius", "jahlyrics", "musixmatch"];
+pub(crate) const FETCHERS: &[&str] = &["azlyrics", "genius", "jahlyrics", "musixmatch"];
 
 pub(crate) async fn fetch(fetcher: &str, title: &str, artist: &str) -> Result<String> {
 	match fetcher {
@@ -71,5 +71,5 @@ async fn fetch_inner<FETCHER: Fetcher>(title: &str, artist: &str) -> Result<Stri
 	}
 
 	FETCHER::post_process(&mut result);
-	return Ok(result);
+	Ok(result)
 }

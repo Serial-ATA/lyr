@@ -28,6 +28,6 @@ impl Fetcher for AZLyricsFetcher {
             .unwrap()
 		});
 
-		&*REGEX
+		&REGEX
 	}
 }

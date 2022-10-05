@@ -27,6 +27,6 @@ impl Fetcher for GeniusFetcher {
 			Regex::new(r#"<div.*?class="(?:lyrics|Lyrics__Container).*?>(.*?)</div>"#).unwrap()
 		});
 
-		&*REGEX
+		&REGEX
 	}
 }

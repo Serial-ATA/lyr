@@ -26,6 +26,6 @@ impl Fetcher for JahLyricsFetcher {
 				.unwrap()
 		});
 
-		&*REGEX
+		&REGEX
 	}
 }
