@@ -13,12 +13,12 @@ use regex::Regex;
 
 pub(crate) const FETCHERS: &[&str] = &["azlyrics", "genius", "jahlyrics", "musixmatch"];
 
-pub(crate) async fn fetch(fetcher: &str, title: &str, artist: &str) -> Result<String> {
+pub(crate) fn fetch(fetcher: &str, title: &str, artist: &str) -> Result<String> {
 	match fetcher {
-		"azlyrics" => fetch_inner::<AZLyricsFetcher>(title, artist).await,
-		"genius" => fetch_inner::<GeniusFetcher>(title, artist).await,
-		"jahlyrics" => fetch_inner::<JahLyricsFetcher>(title, artist).await,
-		"musixmatch" => fetch_inner::<MusixmatchFetcher>(title, artist).await,
+		"azlyrics" => fetch_inner::<AZLyricsFetcher>(title, artist),
+		"genius" => fetch_inner::<GeniusFetcher>(title, artist),
+		"jahlyrics" => fetch_inner::<JahLyricsFetcher>(title, artist),
+		"musixmatch" => fetch_inner::<MusixmatchFetcher>(title, artist),
 		_ => unreachable!(),
 	}
 }
@@ -45,7 +45,7 @@ fn default_post_process(input: &mut String) {
 	*input = crate::utils::strip_html(input.as_str());
 }
 
-async fn fetch_inner<FETCHER: Fetcher>(title: &str, artist: &str) -> Result<String> {
+fn fetch_inner<FETCHER: Fetcher>(title: &str, artist: &str) -> Result<String> {
 	log::info!("Using fetcher: {}", FETCHER::name());
 
 	let url = crate::utils::create_url(
@@ -56,7 +56,7 @@ async fn fetch_inner<FETCHER: Fetcher>(title: &str, artist: &str) -> Result<Stri
 		artist,
 	);
 
-	let response = reqwest::get(url).await?.text().await?;
+	let response = reqwest::blocking::get(url)?.text()?;
 	if response.is_empty() {
 		return Err(Error::NoLyrics);
 	}

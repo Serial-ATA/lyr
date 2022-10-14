@@ -42,18 +42,17 @@ struct Args {
 	output: Option<PathBuf>,
 }
 
-#[tokio::main]
-async fn main() {
+fn main() {
 	utils::setup_logger();
 	let args = Args::parse();
 
-	if let Err(e) = real_main(args).await {
+	if let Err(e) = real_main(args) {
 		log::error!("{e}");
 		process::exit(-1);
 	}
 }
 
-async fn real_main(args: Args) -> Result<()> {
+fn real_main(args: Args) -> Result<()> {
 	let config = Config::read()?;
 
 	let (title, artist) = {
@@ -86,7 +85,7 @@ async fn real_main(args: Args) -> Result<()> {
 	loop {
 		if let Some(fetcher) = fetchers.next() {
 			// TODO: verbose flag
-			if let Ok(lyrics_) = fetchers::fetch(fetcher, &title, &artist).await {
+			if let Ok(lyrics_) = fetchers::fetch(fetcher, &title, &artist) {
 				lyrics = lyrics_;
 				break;
 			}
