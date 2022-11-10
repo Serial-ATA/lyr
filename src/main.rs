@@ -1,5 +1,5 @@
 #![deny(clippy::all, clippy::pedantic)]
-#![allow(clippy::single_match_else, clippy::module_name_repetitions)]
+#![allow(clippy::single_match_else, clippy::module_name_repetitions, clippy::uninlined_format_args)]
 
 mod config;
 mod error;
