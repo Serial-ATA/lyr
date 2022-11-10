@@ -1,5 +1,9 @@
 #![deny(clippy::all, clippy::pedantic)]
-#![allow(clippy::single_match_else, clippy::module_name_repetitions, clippy::uninlined_format_args)]
+#![allow(
+	clippy::single_match_else,
+	clippy::module_name_repetitions,
+	clippy::uninlined_format_args
+)]
 
 mod config;
 mod error;
@@ -13,7 +17,7 @@ use std::path::PathBuf;
 use std::{fs, process};
 
 use clap::{Parser, ValueHint};
-use lofty::{Accessor, AudioFile, ItemKey};
+use lofty::{Accessor, AudioFile, ItemKey, ParseOptions, Probe};
 
 #[derive(Parser)]
 #[clap(name = "lyr")]
@@ -59,7 +63,9 @@ fn real_main(args: Args) -> Result<()> {
 		if let (Some(title), Some(artist)) = (args.title, args.artist) {
 			(title.to_lowercase(), artist.to_lowercase())
 		} else {
-			let file = lofty::read_from_path(args.input.as_ref().unwrap(), false)?;
+			let file = Probe::open(args.input.as_ref().unwrap())?
+				.options(ParseOptions::new().read_properties(false))
+				.read()?;
 
 			let mut title = None;
 			let mut artist = None;
@@ -108,7 +114,9 @@ fn real_main(args: Args) -> Result<()> {
 
 	if let Some(ref input) = args.input {
 		if !args.no_embed {
-			let mut file = lofty::read_from_path(input, false)?;
+			let mut file = Probe::open(input)?
+				.options(ParseOptions::new().read_properties(false))
+				.read()?;
 			let contains_tags = file.contains_tag();
 
 			let tag = match file.primary_tag_mut() {
