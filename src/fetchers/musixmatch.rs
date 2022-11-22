@@ -6,17 +6,9 @@ use regex::{Regex, RegexBuilder};
 pub struct MusixmatchFetcher;
 
 impl Fetcher for MusixmatchFetcher {
-	fn name() -> &'static str {
-		"Musixmatch"
-	}
-
-	fn word_seperator() -> &'static str {
-		"-"
-	}
-
-	fn url_template() -> &'static str {
-		"https://www.musixmatch.com/lyrics/%artist%/%title%"
-	}
+	const NAME: &'static str = "Musixmatch";
+	const WORD_SEPARATOR: &'static str = "-";
+	const URL_TEMPLATE: &'static str = "https://www.musixmatch.com/lyrics/%artist%/%title%";
 
 	fn regex() -> &'static Regex {
 		static REGEX: Lazy<Regex> = Lazy::new(|| {

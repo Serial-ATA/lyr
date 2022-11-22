@@ -24,14 +24,11 @@ pub(crate) fn fetch(fetcher: &str, title: &str, artist: &str) -> Result<String> 
 }
 
 pub(crate) trait Fetcher {
-	fn name() -> &'static str;
-	fn word_seperator() -> &'static str {
-		""
-	}
-	fn apostrophe_needs_sep() -> bool {
-		true
-	}
-	fn url_template() -> &'static str;
+	const NAME: &'static str;
+	const WORD_SEPARATOR: &'static str = "";
+	const APOSTROPHE_NEEDS_SEP: bool = true;
+	const URL_TEMPLATE: &'static str;
+
 	fn regex() -> &'static Regex;
 	fn post_process(input: &mut String) {
 		default_post_process(input);
@@ -46,12 +43,12 @@ fn default_post_process(input: &mut String) {
 }
 
 fn fetch_inner<FETCHER: Fetcher>(title: &str, artist: &str) -> Result<String> {
-	log::info!("Using fetcher: {}", FETCHER::name());
+	log::info!("Using fetcher: {}", FETCHER::NAME);
 
 	let url = crate::utils::create_url(
-		FETCHER::url_template(),
-		FETCHER::word_seperator(),
-		FETCHER::apostrophe_needs_sep(),
+		FETCHER::URL_TEMPLATE,
+		FETCHER::WORD_SEPARATOR,
+		FETCHER::APOSTROPHE_NEEDS_SEP,
 		title,
 		artist,
 	);

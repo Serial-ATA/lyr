@@ -6,17 +6,9 @@ use regex::{Regex, RegexBuilder};
 pub struct AZLyricsFetcher;
 
 impl Fetcher for AZLyricsFetcher {
-	fn name() -> &'static str {
-		"AZLyrics"
-	}
-
-	fn apostrophe_needs_sep() -> bool {
-		false
-	}
-
-	fn url_template() -> &'static str {
-		"https://azlyrics.com/lyrics/%artist%/%title%.html"
-	}
+	const NAME: &'static str = "AZLyrics";
+	const APOSTROPHE_NEEDS_SEP: bool = false;
+	const URL_TEMPLATE: &'static str = "https://azlyrics.com/lyrics/%artist%/%title%.html";
 
 	fn regex() -> &'static Regex {
 		static REGEX: Lazy<Regex> = Lazy::new(|| {
