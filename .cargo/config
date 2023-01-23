@@ -1,0 +1,52 @@
+[target.'cfg(all())']
+rustflags = [
+    #### DOES NOT CHANGE ####
+
+    # Forbids
+    "-Fclippy::dbg_macro",
+    "-Fclippy::string_to_string",
+
+    # Denies
+    "-Dclippy::pedantic",
+    "-Dclippy::all",
+    "-Drust_2018_idioms",
+    "-Dtrivial_casts",
+    "-Dtrivial_numeric_casts",
+    "-Dunused_import_braces",
+    "-Dexplicit_outlives_requirements",
+
+    # Allows
+    "-Aunknown_lints",
+    "-Aclippy::too_many_lines",
+    "-Aclippy::cast_precision_loss",
+    "-Aclippy::cast_sign_loss",
+    "-Aclippy::cast_possible_wrap",
+    "-Aclippy::cast_possible_truncation",
+    "-Aclippy::module_name_repetitions",
+    "-Aclippy::must_use_candidate",
+    "-Alet_underscore_drop",
+    "-Aclippy::match_wildcard_for_single_variants",
+    "-Aclippy::semicolon_if_nothing_returned",
+    "-Aclippy::new_without_default",
+    "-Aclippy::from_over_into",
+    "-Aclippy::upper_case_acronyms",
+    "-Aclippy::single_match_else",
+    "-Aclippy::similar_names",
+    "-Aclippy::len_without_is_empty",
+    "-Aclippy::needless_late_init",
+    "-Aclippy::type_complexity",
+    "-Aclippy::type_repetition_in_bounds",
+    "-Aunused_qualifications",
+    "-Aclippy::return_self_not_must_use",
+    "-Aclippy::bool_to_int_with_if",
+    "-Aclippy::uninlined_format_args",
+    "-Aclippy::manual_let_else",
+
+    # For Library docs
+    # "-Dmissing_docs",
+    # "-Drustdoc::broken_intra_doc_links",
+    # "-Aclippy::doc_markdown",
+    # "-Aclippy::tabs_in_doc_comments",
+
+    #### EXTRAS BELOW ####
+]
