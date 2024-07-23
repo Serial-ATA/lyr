@@ -1,10 +1,10 @@
 [package]
 name = "lyr"
-version = "0.2.0"
+version = "0.3.0"
 authors = ["Serial <69764315+Serial-ATA@users.noreply.github.com>"]
 edition = "2021"
 license = "MIT OR Apache-2.0"
-description = "A tool to download and embed lyrics from multiple sources "
+description = "A tool to download and embed lyrics from multiple sources"
 repository = "https://github.com/Serial-ATA/lyr"
 keywords = ["lyrics", "tags", "audio", "metadata"]
 categories = ["multimedia::audio", "command-line-utilities"]
