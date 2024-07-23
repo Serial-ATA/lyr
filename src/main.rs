@@ -32,12 +32,12 @@ struct Args {
 	#[clap(long, short)]
 	artist: Option<String>,
 	#[clap(
-        long,
-        short,
-        required_unless_present_all = &["title", "artist"],
-        value_hint = ValueHint::FilePath,
-        help = "A file to extract the artist/title from, and optionally embed the lyrics into"
-    )]
+		long,
+		short,
+		required_unless_present_all = &["title", "artist"],
+		value_hint = ValueHint::FilePath,
+		help = "A file to extract the artist/title from, and optionally embed the lyrics into"
+	)]
 	input: Option<PathBuf>,
 	#[clap(
 		long,
