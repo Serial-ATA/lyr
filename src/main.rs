@@ -17,10 +17,10 @@ use std::path::PathBuf;
 use std::{fs, process};
 
 use clap::{Parser, ValueHint};
-use lofty::tag::{Accessor, ItemKey};
-use lofty::file::{AudioFile, TaggedFileExt};
 use lofty::config::{ParseOptions, WriteOptions};
+use lofty::file::{AudioFile, TaggedFileExt};
 use lofty::probe::Probe;
+use lofty::tag::{Accessor, ItemKey};
 
 #[derive(Parser)]
 #[clap(name = "lyr")]
@@ -62,31 +62,34 @@ fn main() {
 fn real_main(args: Args) -> Result<()> {
 	let config = Config::read()?;
 
-	let (title, artist) = {
-		if let (Some(title), Some(artist)) = (args.title, args.artist) {
-			(title.to_lowercase(), artist.to_lowercase())
-		} else {
-			let file = Probe::open(args.input.as_ref().unwrap())?
-				.options(ParseOptions::new().read_properties(false))
-				.read()?;
+	let (title, artist);
 
-			let mut title = None;
-			let mut artist = None;
-			for tag in file.tags() {
-				if title.is_some() && artist.is_some() {
-					break;
-				}
+	if let (Some(arg_title), Some(arg_artist)) = (args.title, args.artist) {
+		title = arg_title.to_lowercase();
+		artist = arg_artist.to_lowercase();
+	} else {
+		let file = Probe::open(args.input.as_ref().unwrap())?
+			.options(ParseOptions::new().read_properties(false))
+			.read()?;
 
-				title = tag.title().map(|title| title.to_lowercase());
-				artist = tag.artist().map(|artist| artist.to_lowercase());
+		let mut tag_title = None;
+		let mut tag_artist = None;
+		for tag in file.tags() {
+			if tag_title.is_some() && tag_artist.is_some() {
+				break;
 			}
 
-			match (title, artist) {
-				(Some(title), Some(artist)) => (title, artist),
-				(None, _) | (_, None) => return Err(Error::InvalidTags),
-			}
+			tag_title = tag.title().map(|title| title.to_lowercase());
+			tag_artist = tag.artist().map(|artist| artist.to_lowercase());
 		}
-	};
+
+		let (Some(tag_title), Some(tag_artist)) = (tag_title, tag_artist) else {
+			return Err(Error::InvalidTags);
+		};
+
+		title = tag_title;
+		artist = tag_artist;
+	}
 
 	let mut fetchers = config.fetchers.iter();
 	let lyrics;

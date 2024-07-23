@@ -2,8 +2,8 @@ use std::borrow::Cow;
 use std::io::Write;
 
 use aho_corasick::{AhoCorasick, AhoCorasickBuilder, MatchKind};
-use env_logger::{Builder, Target, WriteStyle};
 use env_logger::fmt::style::{AnsiColor, Color, Style};
+use env_logger::{Builder, Target, WriteStyle};
 use log::{Level, LevelFilter};
 use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
@@ -39,7 +39,8 @@ fn unescape_html(content: &str) -> String {
 			.build([
 				"&nbsp;", "&lt;", "&gt;", "&amp;", "&quot;", "&apos;", "&cent;", "&pound;",
 				"&yen;", "&euro;", "&copy;", "&reg;", "&ndash;", "&mdash;",
-			]).unwrap()
+			])
+			.unwrap()
 	});
 
 	MATCHER.replace_all(
@@ -51,10 +52,10 @@ fn unescape_html(content: &str) -> String {
 }
 
 #[rustfmt::skip]
-fn unescape_utf8(content: &str) -> Cow<str> {
+fn unescape_utf8(content: &str) -> Cow<'_, str> {
     static UNESCAPE_UTF8_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"&#(\w{0,5});").unwrap());
 
-    UNESCAPE_UTF8_REGEX.replace_all(content, |c: &Captures| {
+    UNESCAPE_UTF8_REGEX.replace_all(content, |c: &Captures<'_>| {
         let cont = &c[1];
         let radix = if &cont[..1] == "x" { 16 } else { 10 };
         let n = u32::from_str_radix(&cont[1..], radix).unwrap();
