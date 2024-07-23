@@ -1,6 +1,6 @@
 # Lyr
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Serial-ATA/lyr/CI?style=for-the-badge&logo=github)](https://github.com/Serial-ATA/lyr/actions/workflows/ci.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/Serial-ATA/lyr/ci.yml?style=for-the-badge&logo=github)](https://github.com/Serial-ATA/lyr/actions/workflows/ci.yml)
 [![Downloads](https://img.shields.io/crates/d/lyr?style=for-the-badge&logo=rust)](https://crates.io/crates/lyr)
 [![Version](https://img.shields.io/crates/v/lyr?style=for-the-badge&logo=rust)](https://crates.io/crates/lyr)
 
