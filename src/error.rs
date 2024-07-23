@@ -11,7 +11,7 @@ pub enum Error {
 	BadFetcher(String),
 	BadConfig(#[from] toml::de::Error),
 	IO(#[from] std::io::Error),
-	Lofty(#[from] lofty::LoftyError),
+	Lofty(#[from] lofty::error::LoftyError),
 	InvalidTags,
 	NoMatches,
 }

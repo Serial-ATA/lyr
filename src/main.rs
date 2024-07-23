@@ -17,7 +17,10 @@ use std::path::PathBuf;
 use std::{fs, process};
 
 use clap::{Parser, ValueHint};
-use lofty::{Accessor, AudioFile, ItemKey, ParseOptions, Probe};
+use lofty::tag::{Accessor, ItemKey};
+use lofty::file::{AudioFile, TaggedFileExt};
+use lofty::config::{ParseOptions, WriteOptions};
+use lofty::probe::Probe;
 
 #[derive(Parser)]
 #[clap(name = "lyr")]
@@ -74,8 +77,8 @@ fn real_main(args: Args) -> Result<()> {
 					break;
 				}
 
-				title = tag.title().map(str::to_lowercase);
-				artist = tag.artist().map(str::to_lowercase);
+				title = tag.title().map(|title| title.to_lowercase());
+				artist = tag.artist().map(|artist| artist.to_lowercase());
 			}
 
 			match (title, artist) {
@@ -129,7 +132,7 @@ fn real_main(args: Args) -> Result<()> {
 			};
 
 			tag.insert_text(ItemKey::Lyrics, lyrics);
-			file.save_to_path(input)?;
+			file.save_to_path(input, WriteOptions::default())?;
 		}
 	}
 

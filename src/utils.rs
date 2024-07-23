@@ -2,8 +2,8 @@ use std::borrow::Cow;
 use std::io::Write;
 
 use aho_corasick::{AhoCorasick, AhoCorasickBuilder, MatchKind};
-use env_logger::fmt::Color;
-use env_logger::{Builder, WriteStyle};
+use env_logger::{Builder, Target, WriteStyle};
+use env_logger::fmt::style::{AnsiColor, Color, Style};
 use log::{Level, LevelFilter};
 use once_cell::sync::Lazy;
 use regex::{Captures, Regex};
@@ -13,21 +13,22 @@ pub fn setup_logger() {
 
 	builder
 		.format(|buf, record| {
-			let mut style = buf.style();
-
-			let level = match record.level() {
-				Level::Trace => style.set_color(Color::Cyan).value("TRACE"),
-				Level::Debug => style.set_color(Color::Black).value("DEBUG"),
-				Level::Info => style.set_color(Color::Green).value("INFO "),
-				Level::Warn => style.set_color(Color::Yellow).value("WARN "),
-				Level::Error => style.set_color(Color::Red).value("ERROR"),
+			let color = match record.level() {
+				Level::Trace => Color::Ansi(AnsiColor::Cyan),
+				Level::Debug => Color::Ansi(AnsiColor::Black),
+				Level::Info => Color::Ansi(AnsiColor::Green),
+				Level::Warn => Color::Ansi(AnsiColor::Yellow),
+				Level::Error => Color::Ansi(AnsiColor::Red),
 			};
 
-			writeln!(buf, "{}: {}", level, record.args())
+			let style = Style::new().fg_color(Some(color));
+			let level = record.level().to_string().to_ascii_uppercase();
+			writeln!(buf, "{style}{level}{style:#}: {}", record.args())
 		})
 		.filter(None, LevelFilter::Info)
 		.parse_default_env()
 		.write_style(WriteStyle::Always)
+		.target(Target::Stderr)
 		.init();
 }
 
@@ -38,7 +39,7 @@ fn unescape_html(content: &str) -> String {
 			.build([
 				"&nbsp;", "&lt;", "&gt;", "&amp;", "&quot;", "&apos;", "&cent;", "&pound;",
 				"&yen;", "&euro;", "&copy;", "&reg;", "&ndash;", "&mdash;",
-			])
+			]).unwrap()
 	});
 
 	MATCHER.replace_all(
