@@ -22,15 +22,12 @@ impl Default for Config {
 
 impl Config {
 	pub fn read() -> Result<Self> {
-		let config_dir = match dirs::config_dir() {
-			Some(dir) => dir,
-			None => {
-				log::warn!(
-					"Failed to find config dir, using default config. Consider setting \
-					 `XDG_CONFIG_HOME`."
-				);
-				return Ok(Self::default());
-			},
+		let Some(config_dir) = dirs::config_dir() else {
+			log::warn!(
+				"Failed to find config dir, using default config. Consider setting \
+				 `XDG_CONFIG_HOME`."
+			);
+			return Ok(Self::default());
 		};
 
 		let config_dir = config_dir.join("lyr");
